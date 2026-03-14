@@ -4,10 +4,10 @@
  
  Complete each exercise below. Your code should compile and run without errors.
  
- **Student Name:**
- **Z-ID:**
- **Partner Name (if applicable):**
- **Partner Z-ID (if applicable):**
+ **Student Name: Ramya Sri Kadiyala**
+ **Z-ID: Z2039166**
+ **Partner Name : Anusha Reddy Kothapeta**
+ **Partner Z-ID : Z2081200**
  
  ---
  */
@@ -25,7 +25,11 @@ import Foundation
  */
 
 // Your code for 1a here:
-
+enum ValidationError: Error {
+    case emptyField(fieldName: String)
+    case invalidFormat(fieldName: String)
+    case valueTooLong(fieldName: String, maxLength: Int)
+}
 
 
 
@@ -41,9 +45,21 @@ import Foundation
  */
 
 // Your code for 1b here:
-
-
-
+func validateUsername(_ username: String?) throws -> String {
+    guard let username = username, !username.isEmpty else {
+        throw ValidationError.emptyField(fieldName: "username")
+    }
+    
+    guard username.unicodeScalars.allSatisfy({ CharacterSet.alphanumerics.contains($0) }) else {
+        throw ValidationError.invalidFormat(fieldName: "username")
+    }
+    
+    guard username.count <= 20 else {
+        throw ValidationError.valueTooLong(fieldName: "username", maxLength: 20)
+    }
+    
+    return username
+}
 
 /*:
  ### 1c) Calling the Validation Function
@@ -56,13 +72,29 @@ import Foundation
 // Your code for 1c here:
 
 // Using do-catch:
-
+do {
+    let username = try validateUsername("validUser123")
+    print("Valid username: \(username)")
+} catch ValidationError.emptyField(let fieldName) {
+    print("Error: \(fieldName) is empty")
+} catch ValidationError.invalidFormat(let fieldName) {
+    print("Error: \(fieldName) has invalid format")
+} catch ValidationError.valueTooLong(let fieldName, let maxLength) {
+    print("Error: \(fieldName) exceeds max length of \(maxLength)")
+} catch {
+    print("Unexpected error: \(error)")
+}
 
 // Using try?:
+let optionalUsername: String? = try? validateUsername("hello_world") // nil due to invalid format
+let validOptional: String? = try? validateUsername("validUser")
+print("Optional result: \(String(describing: optionalUsername))") // nil
+print("Optional result: \(String(describing: validOptional))")    // Optional("validUser")
 
 
 // Using try! (with a safe value):
-
+let forcedUsername = try! validateUsername("safeUsername")
+print("Forced username: \(forcedUsername)")
 
 
 /*:
@@ -73,14 +105,17 @@ import Foundation
 /*
  Your explanation for 1d here:
  
- do-catch:
+ do-catch:Use this when you need to know exactly what went wrong. If a username is empty
+          that's a different problem than it being too long, and you'd want to handle
+          those separately. Most real code uses this because errors usually matter.
  
+ try?:Use this when failure is fine and you just want nil instead of an error.
+      Good for optional lookups or attempts where not finding something is normal
+      and you don't need to explain why it failed.
  
- try?:
- 
- 
- try!:
- 
+ try!:Use this only when you are completely sure it won't fail, like a hardcoded
+      value you already know is valid. If it does throw, the app crashes immediately,
+      so only use it when failure is genuinely impossible.
  
  */
 
