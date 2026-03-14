@@ -132,6 +132,11 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2e here:
+protocol Displayable {
+    var title: String { get }
+    var subtitle: String { get }
+    func formattedDescription() -> String
+}
 
 
 
@@ -145,7 +150,34 @@ print("Forced username: \(forcedUsername)")
 
 // Your code for 2f here:
 
-
+struct Recipe: Displayable {
+    var name: String
+    var cuisine: String
+    var prepTime: Int
+    var cookTime: Int
+    var servings: Int
+    var ingredients: [String]
+    
+    // Displayable conformance
+    var title: String {
+        return name
+    }
+    
+    var subtitle: String {
+        return "\(cuisine) • \(servings) servings"
+    }
+    
+    func formattedDescription() -> String {
+        return """
+        Recipe: \(name)
+        Cuisine: \(cuisine)
+        Prep Time: \(prepTime) mins
+        Cook Time: \(cookTime) mins
+        Servings: \(servings)
+        Ingredients: \(ingredients.joined(separator: ", "))
+        """
+    }
+}
 
 
 /*:
@@ -154,6 +186,30 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2g here:
+struct Event: Displayable {
+    var eventName: String
+    var location: String
+    var date: String
+    var attendees: Int
+    
+    // Displayable conformance
+    var title: String {
+        return eventName
+    }
+    
+    var subtitle: String {
+        return "\(location) • \(date)"
+    }
+    
+    func formattedDescription() -> String {
+        return """
+        Event: \(eventName)
+        Location: \(location)
+        Date: \(date)
+        Attendees: \(attendees)
+        """
+    }
+}
 
 
 
@@ -165,8 +221,10 @@ print("Forced username: \(forcedUsername)")
 
 // Your code for 2h here:
 
-
-
+// 2h) printInfo function
+func printInfo(for item: Displayable) {
+    print(item.formattedDescription())
+}
 
 /*:
  ### 2i) Demonstrate Protocol Usage
@@ -174,8 +232,25 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2i here:
+let recipe = Recipe(
+    name: "Pasta Carbonara",
+    cuisine: "Italian",
+    prepTime: 10,
+    cookTime: 20,
+    servings: 4,
+    ingredients: ["pasta", "eggs", "bacon", "parmesan", "black pepper"]
+)
 
+let event = Event(
+    eventName: "Swift Workshop",
+    location: "Chicago",
+    date: "March 20, 2026",
+    attendees: 50
+)
 
+printInfo(for: recipe)
+print("---")
+printInfo(for: event)
 
 
 /*:
@@ -191,8 +266,14 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 3j here:
-
-
+func findFirst<T: Equatable>(in array: [T], where predicate: (T) -> Bool) -> T? {
+    for element in array {
+        if predicate(element) {
+            return element
+        }
+    }
+    return nil
+}
 
 
 /*:
@@ -205,10 +286,15 @@ print("Forced username: \(forcedUsername)")
 // Your code for 3k here:
 
 // With Strings:
+let fruits = ["apple", "banana", "cherry", "date", "elderberry"]
+let firstLongFruit = findFirst(in: fruits, where: { $0.count > 5 })
+print(firstLongFruit ?? "Not found")
 
 
 // With Ints:
-
+let scores = [42, 55, 78, 91, 63, 88]
+let firstPassingScore = findFirst(in: scores, where: { $0 >= 90 })
+print(firstPassingScore ?? "Not found")
 
 
 /*:
@@ -223,13 +309,41 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 3l here:
-
-
+struct Stack<Element> {
+    private var elements: [Element] = []
+    
+    mutating func push(_ element: Element) {
+        elements.append(element)
+    }
+    
+    mutating func pop() -> Element? {
+        return elements.popLast()
+    }
+    
+    func peek() -> Element? {
+        return elements.last
+    }
+    
+    var isEmpty: Bool {
+        return elements.isEmpty
+    }
+}
 
 
 // Demonstrate usage:
+var recipeStack = Stack<String>()
 
+recipeStack.push("Pasta Carbonara")
+recipeStack.push("Tacos")
+recipeStack.push("Sushi")
 
+print("Top of stack: \(recipeStack.peek() ?? "empty")")
+print("Is empty: \(recipeStack.isEmpty)")
+
+let popped = recipeStack.pop()
+print("Popped: \(popped ?? "empty")")                    
+
+print("Top after pop: \(recipeStack.peek() ?? "empty")")
 
 
 /*:
