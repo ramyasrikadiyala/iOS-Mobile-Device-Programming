@@ -46,14 +46,15 @@ enum ValidationError: Error {
 
 // Your code for 1b here:
 func validateUsername(_ username: String?) throws -> String {
+    // Guard against nil or empty input
     guard let username = username, !username.isEmpty else {
         throw ValidationError.emptyField(fieldName: "username")
     }
-    
+    // Guard against non-alphanumeric characters
     guard username.unicodeScalars.allSatisfy({ CharacterSet.alphanumerics.contains($0) }) else {
         throw ValidationError.invalidFormat(fieldName: "username")
     }
-    
+    // Guard against length > 20
     guard username.count <= 20 else {
         throw ValidationError.valueTooLong(fieldName: "username", maxLength: 20)
     }
@@ -105,18 +106,17 @@ print("Forced username: \(forcedUsername)")
 /*
  Your explanation for 1d here:
  
- do-catch:Use this when you need to know exactly what went wrong. If a username is empty
-          that's a different problem than it being too long, and you'd want to handle
-          those separately. Most real code uses this because errors usually matter.
+ do-catch: Use when you need to handle specific error cases differently in the UI.
+           For example, showing "field is empty" vs "username too long" are different
+           messages. Most production code uses do-catch because errors usually matter.
  
- try?:Use this when failure is fine and you just want nil instead of an error.
-      Good for optional lookups or attempts where not finding something is normal
-      and you don't need to explain why it failed.
+ try?:     Use when failure is acceptable and nil is a valid outcome. Good for optional
+           lookups where not finding a value is normal — you just want nil, not a
+           specific error message explaining why it failed.
  
- try!:Use this only when you are completely sure it won't fail, like a hardcoded
-      value you already know is valid. If it does throw, the app crashes immediately,
-      so only use it when failure is genuinely impossible.
- 
+ try!:     Use only with hardcoded values you are completely sure will not throw.
+           If it does throw, the app crashes immediately. Never use with user input
+           or network data — only for compile-time constants you fully control.
  */
 
 
@@ -150,34 +150,47 @@ protocol Displayable {
 
 // Your code for 2f here:
 
-struct Recipe: Displayable {
-    var name: String
-    var cuisine: String
-    var prepTime: Int
-    var cookTime: Int
-    var servings: Int
-    var ingredients: [String]
+struct Meal: Identifiable {
+    let id: String
+    let name: String
+    let category: String
+    let area: String?
+    let instructions: String?
+    let thumbnailURL: String
+    var isFavorite: Bool
+    let youtubeURL: String?
     
-    // Displayable conformance
-    var title: String {
-        return name
-    }
+    var ingredientSummary: String { "7 ingredients" }
+}
+
+// Conform Meal to Displayable
+extension Meal: Displayable {
+    var title: String { name }
     
     var subtitle: String {
-        return "\(cuisine) • \(servings) servings"
+        if let area = area {
+            return "\(category) · \(area)"
+        }
+        return category
     }
     
     func formattedDescription() -> String {
-        return """
-        Recipe: \(name)
-        Cuisine: \(cuisine)
-        Prep Time: \(prepTime) mins
-        Cook Time: \(cookTime) mins
-        Servings: \(servings)
-        Ingredients: \(ingredients.joined(separator: ", "))
-        """
+        "🍽 \(name)\n   \(subtitle)\n   \(ingredientSummary)"
     }
 }
+
+// Demonstrate it works
+let meal = Meal(
+    id: "52772",
+    name: "Butter Chicken",
+    category: "Chicken",
+    area: "Indian",
+    instructions: nil,
+    thumbnailURL: "",
+    isFavorite: false,
+    youtubeURL: nil
+)
+
 
 
 /*:
@@ -186,32 +199,32 @@ struct Recipe: Displayable {
  */
 
 // Your code for 2g here:
-struct Event: Displayable {
-    var eventName: String
-    var location: String
-    var date: String
-    var attendees: Int
+// A planner event — completely unrelated to Meal, also conforms to Displayable
+struct PlannerEvent: Identifiable, Displayable {
+    let id: UUID
+    let dayLabel: String
+    let mealName: String
+    let isConfirmed: Bool
     
-    // Displayable conformance
-    var title: String {
-        return eventName
-    }
+    var title: String { "\(dayLabel): \(mealName)" }
     
     var subtitle: String {
-        return "\(location) • \(date)"
+        isConfirmed ? "Confirmed" : "Pending"
     }
     
     func formattedDescription() -> String {
-        return """
-        Event: \(eventName)
-        Location: \(location)
-        Date: \(date)
-        Attendees: \(attendees)
-        """
+        "📅 \(title)\n   Status: \(subtitle)"
     }
 }
 
-
+// Demonstrate it works
+let event = PlannerEvent(
+    id: UUID(),
+    dayLabel: "MON",
+    mealName: "Butter Chicken",
+    isConfirmed: true
+)
+print(event.formattedDescription())
 
 
 /*:
@@ -221,10 +234,11 @@ struct Event: Displayable {
 
 // Your code for 2h here:
 
-// 2h) printInfo function
+// Function that accepts any Displayable type
 func printInfo(for item: Displayable) {
     print(item.formattedDescription())
 }
+
 
 /*:
  ### 2i) Demonstrate Protocol Usage
@@ -232,26 +246,34 @@ func printInfo(for item: Displayable) {
  */
 
 // Your code for 2i here:
-let recipe = Recipe(
-    name: "Pasta Carbonara",
-    cuisine: "Italian",
-    prepTime: 10,
-    cookTime: 20,
-    servings: 4,
-    ingredients: ["pasta", "eggs", "bacon", "parmesan", "black pepper"]
+// Create a second Meal instance
+let meal2 = Meal(
+    id: "52767",
+    name: "Pasta Bolognese",
+    category: "Beef",
+    area: "Italian",
+    instructions: nil,
+    thumbnailURL: "",
+    isFavorite: false,
+    youtubeURL: nil
 )
 
-let event = Event(
-    eventName: "Swift Workshop",
-    location: "Chicago",
-    date: "March 20, 2026",
-    attendees: 50
+// Create a second PlannerEvent instance
+let event2 = PlannerEvent(
+    id: UUID(),
+    dayLabel: "FRI",
+    mealName: "Pasta Bolognese",
+    isConfirmed: false
 )
 
-printInfo(for: recipe)
-print("---")
+// Call printInfo with all instances — works for both types!
+print("--- Meal instances ---")
+printInfo(for: meal)
+printInfo(for: meal2)
+
+print("\n--- PlannerEvent instances ---")
 printInfo(for: event)
-
+printInfo(for: event2)
 
 /*:
  ---
@@ -285,17 +307,15 @@ func findFirst<T: Equatable>(in array: [T], where predicate: (T) -> Bool) -> T? 
 
 // Your code for 3k here:
 
-// With Strings:
-let fruits = ["apple", "banana", "cherry", "date", "elderberry"]
-let firstLongFruit = findFirst(in: fruits, where: { $0.count > 5 })
-print(firstLongFruit ?? "Not found")
+// With Strings: find first meal name longer than 5 characters
+let mealNames = ["Tacos", "Butter Chicken", "Sushi", "Pasta Bolognese", "Rice"]
+let firstLongName = findFirst(in: mealNames, where: { $0.count > 5 })
+print("First meal name longer than 5 chars: \(firstLongName ?? "Not found")")
 
-
-// With Ints:
+// With Ints: find first score >= 90
 let scores = [42, 55, 78, 91, 63, 88]
-let firstPassingScore = findFirst(in: scores, where: { $0 >= 90 })
-print(firstPassingScore ?? "Not found")
-
+let firstHighScore = findFirst(in: scores, where: { $0 >= 90 })
+print("First score >= 90: \(firstHighScore ?? -1)")
 
 /*:
  ### 3l) Generic Stack
@@ -332,7 +352,6 @@ struct Stack<Element> {
 
 // Demonstrate usage:
 var recipeStack = Stack<String>()
-
 recipeStack.push("Pasta Carbonara")
 recipeStack.push("Tacos")
 recipeStack.push("Sushi")
@@ -341,10 +360,8 @@ print("Top of stack: \(recipeStack.peek() ?? "empty")")
 print("Is empty: \(recipeStack.isEmpty)")
 
 let popped = recipeStack.pop()
-print("Popped: \(popped ?? "empty")")                    
-
+print("Popped: \(popped ?? "empty")")
 print("Top after pop: \(recipeStack.peek() ?? "empty")")
-
 
 /*:
  ---
