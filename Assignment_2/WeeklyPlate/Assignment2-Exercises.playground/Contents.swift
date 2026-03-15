@@ -4,10 +4,10 @@
  
  Complete each exercise below. Your code should compile and run without errors.
  
- **Student Name:Ramya**
- **Z-ID:**
- **Partner Name (if applicable):**
- **Partner Z-ID (if applicable):**
+ **Student Name: Ramya Sri Kadiyala**
+ **Z-ID: Z2039166**
+ **Partner Name (if applicable): Anusha Reddy Kothapeta**
+ **Partner Z-ID (if applicable):* Z2081200*
  
  ---
  */
