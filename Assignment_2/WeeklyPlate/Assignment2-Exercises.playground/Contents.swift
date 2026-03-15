@@ -243,9 +243,14 @@ printInfo(for: event2)
  */
 
 // Your code for 3j here:
-
-
-
+func findFirst<T: Equatable>(in array: [T], where predicate: (T) -> Bool) -> T? {
+    for element in array {
+        if predicate(element) {
+            return element
+        }
+    }
+    return nil
+}
 
 /*:
  ### 3k) Demonstrate findFirst Usage
@@ -255,12 +260,15 @@ printInfo(for: event2)
  */
 
 // Your code for 3k here:
-
 // With Strings:
-
+let mealNames = ["Tacos", "Butter Chicken", "Sushi", "Pasta Bolognese", "Rice"]
+let firstLongName = findFirst(in: mealNames, where: { $0.count > 5 })
+print("First meal longer than 5 chars: \(firstLongName ?? "Not found")")
 
 // With Ints:
-
+let scores = [42, 55, 78, 91, 63, 88]
+let firstHighScore = findFirst(in: scores, where: { $0 >= 90 })
+print("First score >= 90: \(firstHighScore ?? -1)")
 
 
 /*:
@@ -275,12 +283,34 @@ printInfo(for: event2)
  */
 
 // Your code for 3l here:
-
+struct Stack<Element> {
+    private var elements: [Element] = []
+    mutating func push(_ element: Element) {
+        elements.append(element)
+    }
+    mutating func pop() -> Element? {
+        return elements.popLast()
+    }
+    func peek() -> Element? {
+        return elements.last
+    }
+    var isEmpty: Bool {
+        return elements.isEmpty
+    }
+}
 
 
 
 // Demonstrate usage:
-
+var recipeStack = Stack<String>()
+recipeStack.push("Pasta Carbonara")
+recipeStack.push("Tacos")
+recipeStack.push("Sushi")
+print("Top: \(recipeStack.peek() ?? "empty")")
+print("Is empty: \(recipeStack.isEmpty)")
+let popped = recipeStack.pop()
+print("Popped: \(popped ?? "empty")")
+print("Top after pop: \(recipeStack.peek() ?? "empty")")
 
 
 
@@ -308,8 +338,35 @@ printInfo(for: event2)
  */
 
 // Your code for 4n here:
+class MediaItem {
+    let title: String
+    init(title: String) {
+        self.title = title
+    }
+}
 
+class Movie: MediaItem {
+    let director: String
+    init(title: String, director: String) {
+        self.director = director
+        super.init(title: title)
+    }
+}
 
+class Song: MediaItem {
+    let artist: String
+    init(title: String, artist: String) {
+        self.artist = artist
+        super.init(title: title)
+    }
+}
+let mediaLibrary: [MediaItem] = [
+    Movie(title: "The Chef", director: "Jon Favreau"),
+    Song(title: "Kitchen Sink", artist: "Twenty One Pilots"),
+    Movie(title: "Julie and Julia", director: "Nora Ephron"),
+    Song(title: "Food", artist: "Various Artists"),
+    Movie(title: "Ratatouille", director: "Brad Bird")
+]
 
 
 /*:
@@ -319,7 +376,13 @@ printInfo(for: event2)
  */
 
 // Your code for 4o here:
-
+var movieCount = 0
+var songCount = 0
+for item in mediaLibrary {
+    if item is Movie { movieCount += 1 }
+    if item is Song { songCount += 1 }
+}
+print("Movies: \(movieCount), Songs: \(songCount)")
 
 
 
@@ -329,8 +392,19 @@ printInfo(for: event2)
  */
 
 // Your code for 4p here:
+print("--- Movie details ---")
+for item in mediaLibrary {
+    if let movie = item as? Movie {
+        print("Movie: \(movie.title) directed by \(movie.director)")
+    }
+}
 
-
+print("--- Song details ---")
+for item in mediaLibrary {
+    if let song = item as? Song {
+        print("Song: \(song.title) by \(song.artist)")
+    }
+}
 
 
 /*:
