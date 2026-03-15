@@ -132,8 +132,11 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2e here:
-
-
+protocol Displayable {
+    var title: String { get }
+    var subtitle: String { get }
+    func formattedDescription() -> String
+}
 
 
 /*:
@@ -144,8 +147,32 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2f here:
+struct Meal: Identifiable {
+    let id: String
+    let name: String
+    let category: String
+    let area: String?
+    let instructions: String?
+    let thumbnailURL: String
+    var isFavorite: Bool
+    let youtubeURL: String?
+    var ingredientSummary: String { return "7 ingredients" }
+}
 
+extension Meal: Displayable {
+    var title: String { return name }
+    var subtitle: String {
+        if let area = area {
+            return "\(category) - \(area)"
+        }
+        return category
+    }
+    func formattedDescription() -> String {
+        return "Meal: \(name) | \(subtitle) | \(ingredientSummary)"
+    }
+}
 
+let meal = Meal(id: "52772", name: "Butter Chicken", category: "Chicken", area: "Indian", instructions: nil, thumbnailURL: "", isFavorite: false, youtubeURL: nil)
 
 
 /*:
@@ -154,9 +181,26 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2g here:
+struct PlannerEvent: Identifiable, Displayable {
+    let id: String
+    let dayLabel: String
+    let mealName: String
+    let isConfirmed: Bool
+    var title: String { return "\(dayLabel): \(mealName)" }
+    var subtitle: String {
+        if isConfirmed {
+            return "Confirmed"
+        } else {
+            return "Pending"
+        }
+    }
+    func formattedDescription() -> String {
+        return "Event: \(title) | Status: \(subtitle)"
+    }
+}
 
-
-
+let event = PlannerEvent(id: "1", dayLabel: "MON", mealName: "Butter Chicken", isConfirmed: true)
+print(event.formattedDescription())
 
 /*:
  ### 2h) Print Info Function
@@ -164,9 +208,9 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2h here:
-
-
-
+func printInfo(for item: Displayable) {
+    print(item.formattedDescription())
+}
 
 /*:
  ### 2i) Demonstrate Protocol Usage
@@ -174,9 +218,17 @@ print("Forced username: \(forcedUsername)")
  */
 
 // Your code for 2i here:
+let meal2 = Meal(id: "52767", name: "Pasta Bolognese", category: "Beef", area: "Italian", instructions: nil, thumbnailURL: "", isFavorite: false, youtubeURL: nil)
 
+let event2 = PlannerEvent(id: "2", dayLabel: "FRI", mealName: "Pasta Bolognese", isConfirmed: false)
 
+print("--- Meal instances ---")
+printInfo(for: meal)
+printInfo(for: meal2)
 
+print("--- PlannerEvent instances ---")
+printInfo(for: event)
+printInfo(for: event2)
 
 /*:
  ---
