@@ -5,6 +5,13 @@
 // PlannedDay represents one day's meal assignment.
 // WeekPlan represents the full 7-day plan for a given week.
 
+/*
+**Student Name: Anusha Reddy Kothapeta **
+**Z-ID: Z2081200**
+**Partner Name (if applicable): Ramya Sri Kadiyala**
+**Partner Z-ID (if applicable): Z2039166**
+*/
+
 import Foundation
 
 /// Represents a single day in the weekly meal planner.

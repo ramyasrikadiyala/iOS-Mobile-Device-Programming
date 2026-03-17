@@ -4,6 +4,13 @@
 // Static sample data used for SwiftUI Previews and development testing.
 // Mirrors real TheMealDB API responses so previews look realistic.
 
+/*
+**Student Name: Anusha Reddy Kothapeta **
+**Z-ID: Z2081200**
+**Partner Name (if applicable): Ramya Sri Kadiyala**
+**Partner Z-ID (if applicable): Z2039166**
+*/
+
 import Foundation
 
 extension Meal {
