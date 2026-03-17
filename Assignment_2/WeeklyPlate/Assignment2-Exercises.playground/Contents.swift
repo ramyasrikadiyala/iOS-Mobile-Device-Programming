@@ -4,10 +4,10 @@
  
  Complete each exercise below. Your code should compile and run without errors.
  
- **Student Name: Ramya Sri Kadiyala**
- **Z-ID: Z2039166**
- **Partner Name (if applicable): Anusha Reddy Kothapeta**
- **Partner Z-ID (if applicable):* Z2081200*
+ **Student Name: Ramya Sri Kadiyala **
+ **Z-ID: Z2039166 **
+ **Partner Name (if applicable): Anusha Reddy Kothapeta **
+ **Partner Z-ID (if applicable): Z2081200 **
  
  ---
  */
@@ -87,7 +87,7 @@ do {
 
 
 // Using try?:
-let optionalUsername: String? = try? validateUsername("helloworld")
+let optionalUsername: String? = try? validateUsername("hello world!")
 let validOptional: String? = try? validateUsername("validUser")
 print("Optional invalid: \(String(describing: optionalUsername))")
 print("Optional valid: \(String(describing: validOptional))")
@@ -328,16 +328,6 @@ print("Top after pop: \(recipeStack.peek() ?? "empty")")
  */
 
 // Your code for 4m here:
-
-
-
-
-/*:
- ### 4n) Mixed Array
- Create an array of `MediaItem` containing a mix of `Movie` and `Song` instances (at least 5 items total).
- */
-
-// Your code for 4n here:
 class MediaItem {
     let title: String
     init(title: String) {
@@ -360,6 +350,15 @@ class Song: MediaItem {
         super.init(title: title)
     }
 }
+
+
+/*:
+ ### 4n) Mixed Array
+ Create an array of `MediaItem` containing a mix of `Movie` and `Song` instances (at least 5 items total).
+ */
+
+// Your code for 4n here:
+
 let mediaLibrary: [MediaItem] = [
     Movie(title: "The Chef", director: "Jon Favreau"),
     Song(title: "Kitchen Sink", artist: "Twenty One Pilots"),
