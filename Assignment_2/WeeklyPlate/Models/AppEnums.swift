@@ -1,8 +1,12 @@
 // AppEnums.swift
 // WeeklyPlate
-//
 // Enums representing states and options used throughout the app.
-
+/*
+**Student Name: Anusha Reddy Kothapeta **
+**Z-ID: Z2081200**
+**Partner Name (if applicable): Ramya Sri Kadiyala**
+**Partner Z-ID (if applicable): Z2039166**
+*/
 import Foundation
 
 // MARK: - LoadingState
@@ -50,7 +54,6 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 // MARK: - DayOfWeek
 
 /// The seven days of the week used to label planner rows.
-/// Ordered Monday → Sunday to match the wireframe layout.
 enum DayOfWeek: Int, CaseIterable, Identifiable {
     case monday    = 0
     case tuesday   = 1
@@ -91,8 +94,7 @@ enum DayOfWeek: Int, CaseIterable, Identifiable {
 
 // MARK: - MealPlanAction
 
-/// Actions a user can take on the planner, used for confirmation dialogs.
-/// Demonstrates an enum with an associated value (required by Assignment 2).
+/// Actions a user can take on the planner, used for confirmation dialogs
 enum MealPlanAction {
     /// User wants to add a meal to a specific day
     case addMeal(dayOfWeek: DayOfWeek)
